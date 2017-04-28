@@ -1,0 +1,126 @@
+{
+	"version": 1,
+	"allow_edit": true,
+	"plugins": [],
+	"panes": [
+		{
+			"title": "Datos Aleatorios",
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 3
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "gauge",
+					"settings": {
+						"title": "",
+						"value": "datasources[\"dato aleatorio\"][\"valor\"]",
+						"units": "U",
+						"min_value": 0,
+						"max_value": "200"
+					}
+				}
+			]
+		},
+		{
+			"title": "Temperatura Lima",
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 1
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "text_widget",
+					"settings": {
+						"size": "regular",
+						"value": "datasources[\"Clima Lima\"][\"main\"][\"temp\"]",
+						"sparkline": true,
+						"animate": true,
+						"units": "°C"
+					}
+				}
+			]
+		},
+		{
+			"title": "Sensor Acelerometro",
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 2
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "sparkline",
+					"settings": {
+						"title": "Izquierda / Derecha",
+						"value": [
+							"datasources[\"Acelerometro\"][\"izquierdaDerecha\"]"
+						]
+					}
+				},
+				{
+					"type": "sparkline",
+					"settings": {
+						"title": "Frente / Atras",
+						"value": [
+							"datasources[\"Acelerometro\"][\"frenteParteTrasera\"]"
+						]
+					}
+				},
+				{
+					"type": "sparkline",
+					"settings": {
+						"title": "Direccion",
+						"value": [
+							"datasources[\"Acelerometro\"][\"direccion\"]"
+						]
+					}
+				}
+			]
+		}
+	],
+	"datasources": [
+		{
+			"name": "dato aleatorio",
+			"type": "JSON",
+			"settings": {
+				"url": "https://testvaloraleatorio.herokuapp.com/getData",
+				"use_thingproxy": true,
+				"refresh": 1,
+				"method": "GET"
+			}
+		},
+		{
+			"name": "Clima Lima",
+			"type": "JSON",
+			"settings": {
+				"url": "http://api.openweathermap.org/data/2.5/weather?id=3936456&appid=fa8467a400c34d20741d89066c0f1606",
+				"use_thingproxy": true,
+				"refresh": 600,
+				"method": "GET"
+			}
+		},
+		{
+			"name": "Acelerometro",
+			"type": "JSON",
+			"settings": {
+				"url": "https://sensorjson.herokuapp.com/",
+				"use_thingproxy": true,
+				"refresh": 1,
+				"method": "GET"
+			}
+		}
+	],
+	"columns": 3
+}
