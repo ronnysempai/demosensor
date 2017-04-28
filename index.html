@@ -61,7 +61,15 @@
                         cargaConfiguracionPorDefecto('dashboard6.json');
                         //
                     });
-
+                    if (typeof(Storage) !== "undefined") {
+                        // Store
+                        if(!localStorage.getItem("solounavez")){
+                            localStorage.setItem("solounavez", "1");
+                            setTimeout(function(){location.reload(true);}, 3000)    
+                        }
+                        
+                    } 
+                    
 
                 });
 
