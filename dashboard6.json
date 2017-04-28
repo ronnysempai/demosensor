@@ -27,29 +27,6 @@
 			]
 		},
 		{
-			"title": "Temperatura Lima",
-			"width": 1,
-			"row": {
-				"3": 1
-			},
-			"col": {
-				"3": 1
-			},
-			"col_width": 1,
-			"widgets": [
-				{
-					"type": "text_widget",
-					"settings": {
-						"size": "regular",
-						"value": "datasources[\"Clima Lima\"][\"main\"][\"temp\"]",
-						"sparkline": true,
-						"animate": true,
-						"units": "°C"
-					}
-				}
-			]
-		},
-		{
 			"title": "Sensor Acelerometro",
 			"width": 1,
 			"row": {
@@ -85,6 +62,26 @@
 						"value": [
 							"datasources[\"Acelerometro\"][\"direccion\"]"
 						]
+					}
+				}
+			]
+		},
+		{
+			"title": "El Tiempo",
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 1
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "html",
+					"settings": {
+						"html": "\n<div id=\"TT103459ca5\"></div>\n<script type=\"text/javascript\" src=\"https://www.tutiempo.net/s-widget/full/103459/ca5/300\"></script>",
+						"height": 2
 					}
 				}
 			]
