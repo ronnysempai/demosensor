@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8"> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Demo de Data4Decision usa sensor de orientación y comunicación en tiempo real">
+    <meta name="author" content="Data4Decision S.A.">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Demostración de comunicar en tiempo real</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+	
+	<!-- bootstrap switch -->
+    <link href="./bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+
+    <script src="./assets/js/ie-emulation-modes-warning.js"></script>
+	
+	<!-- Leafelet -->
+	<link rel="stylesheet" href="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<script src="https://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+	sup {
+	    vertical-align: super;
+	    font-size: smaller;
+	}
+	</style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top visible-lg-block hidden-sm" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+			<a class="navbar-brand" href="#">Demo de comunicación de datos de sensor en tiempo real</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+<div class="container">
+	<div class="starter-template">
+		<div class="jumbotron">
+			<h1>Demo de comunicación</h1>
+			<p class="lead">Demostración de leer orientación de un dispositivo movil, comunicarlo y mostralo a otros usuarios.</p>
+		</div>
+		
+		<noscript>
+			<div class="alert alert-danger alert-dismissible fade in" role="alert">
+			  <h4>Error de JavaScript!</h4>
+			  <p>Actualmente su navegador no soporta usar la tecnologia JavaScript. Como todos las paginas modernas esta pagina no funciona sin eso. Después de activar JavaScript recarge este pagina.</p>
+			</div>
+		</noscript>
+		
+		<div class="alert alert-danger alert-dismissible fade in" role="alert" id="pubnubConecionError" style="display:none;">
+		  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Cerar</span></button>
+		  <h4>Error de coneción!</h4>
+		  <p>Actualmente una comunicación no esta posible. Trate de mejorar se coneción a internet y después recargar este pagina.</p>
+		</div>
+		
+		<h2>Enviar la orientación del dispositivo movil</h2>
+		<div class="row row-centered">
+			<div class="col-md-6 col-sm-10 col-centered">
+				<div class="panel panel-default">
+					<div class="panel-title">
+						<p class="text-center">Datos del orientación de su dispositivo</p>
+					</div>
+					<div class="panel-body">
+						<p id="medidoOrientacionData">Espere por favor ...</p>			
+					</div>
+					<div class="panel-title">
+						<p class="text-center">Dato de Porcentaje de Bateria de su dispositivo</p>
+					</div>
+					<div class="panel-body">
+						<p id="medidorBateria">Espere por favor ...</p>			
+					</div>
+					<div class="panel-title">
+						<p class="text-center">Dato Aceleracion de su dispositivo</p>
+					</div>
+					<div class="panel-body">
+						<p id="aceleracion">Espere por favor ...</p>			
+					</div>
+					<div class="panel-title">
+						<p class="text-center">Dato Aceleracion de su dispositivo tomando en cuenta La gravedad</p>
+					</div>
+					<div class="panel-body">
+						<p id="aceleracionConGravedad">Espere por favor ...</p>			
+					</div>
+					<div class="panel-title">
+						<p class="text-center">Datos de GPS</p>
+					</div>
+					<div class="panel-body">
+						<p id="coordendas">Espere por favor ...</p>			
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row row-centered">
+			<div class="col-md-8 col-sm-10 col-centered">
+				<div class="panel panel-default">
+					<div class="panel-title">
+						<p class="text-center">Configuración de la transmisión</p> 
+					</div>
+					<div class="panel-body">			
+						<div class="input-group">
+							<span class="input-group-addon">Nombre</span>
+							<input type="text" class="form-control" placeholder="Escriba un nombre" maxlength="30" id="nombreDispositivo">
+						</div>
+						<div class="text-center" id="radioCanalSelect">
+							<br><br>
+							<label for="radioCanalNo">Transmisión</label>
+							<input type="checkbox" value="noCanal" id="radioCanalNo" autocomplete="off" data-on-text="Sí" data-off-text="No" data-indeterminate="true" checked>
+							<br><br>
+							<span class="help-block">Cuando hay datos del sensor y usted ha escrito un nombre puede activar la transmisión</span>
+						</div>
+							<p id="statusCanal" class="text-center">No transmitiendo ...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+      </div>
+
+					
+		</div>
+
+		  
+
+	 </div>
+    </div><!-- /.container -->
+	<div class="footer">
+      <div class="container">
+        <p class="text-muted">&copy; Data4Decision S.A. 2015</p>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="./dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./assets/js/ie10-viewport-bug-workaround.js"></script>
+	<script type='text/javascript' src="https://cdn.pubnub.com/pubnub.min.js"></script>
+	<!-- switch -->
+	<script src="./bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+	<script>
+			  // asegura que cargado por https
+		if (window.location.protocol != "https:")
+			window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+	$(function() {
+		/*
+			pubnub
+		*/  
+		var pubnub
+		,	dispositivoId = null;	// cual el la uuid para este usuario (de enviar)
+		try {
+			pubnub = PUBNUB.init({
+				subscribe_key: 'sub-c-d01752b4-668d-11e4-984a-02ee2ddab7fe',
+				publish_key: 'pub-c-f68a8b50-f1d0-44c8-8e68-ba478107e1b2',
+				ssl: true
+			});
+			pubnub.uuid( function (uuid) {	// pubnub crea uuid
+				dispositivoId = uuid;
+			})
+		} catch (e) {
+			fn_mensajeError();
+		}
+			
+		// envia por PubNub
+		try {
+			function fn_enviaPubNub (canal, mensaje) {
+				pubnub.publish({ 
+					channel   : canal,
+					message   : mensaje, // pon objecto JSON o un array (no un string)
+					callback  : function(details) {
+							var exito  = details[0]
+							,   respuesta = details[1];
+							
+						},
+					error     : function(e) { console.error( "FAILED! RETRY PUBLISH!", e ); }
+				});
+			}
+		} catch (e) {
+			fn_mensajeError();
+		} 
+		
+		function fn_mensajeError(){
+			$('#pubnubConecionError').show();
+		}
+	
+		
+		/*
+			enviar
+		*/
+		initMedirOrientacion()
+		function initMedirOrientacion() {
+			if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
+				// Listen for the deviceorientation event and handle the raw data
+				window.addEventListener('deviceorientation', function(eventData) {
+					// gamma is the left-to-right tilt in degrees, where right is positive
+					var inclinacionID = eventData.gamma;
+					// beta is the front-to-back tilt in degrees, where front is positive
+					var inclinacionFT = eventData.beta;
+					// alpha is the compass direction the device is facing in degrees (Safari: no como brujula diferencia del norte sino diferencia a posicion en momneto de iniciar)
+					var dir = eventData.alpha
+					// call our orientation event handler
+					deviceOrientationHandler(inclinacionID, inclinacionFT, dir);
+				}, false);
+				
+			} else {
+				$("#medidoOrientacionData").html("No hay datos disponible.");
+				$('#radioCanal1').attr('disabled', true).parent().parent().addClass('disabled') 
+				hayDatos = false // --> enviarDatos = false;
+				enviarDatos = false;
+			}
+		}
+		/*.---*/
+		var eventos = 0				// permite detectat cuando se llama la primera vez evento deviceorientation
+		,	soloCeros				// permite detectar si evento todavia solo prodcuio valores 0
+		,	hayDatos = false		// hay dados de un sensor de orientacion (algo que se puede enviar)
+		,	canalActivo = false		// envio activado por usuario
+		,	enviarDatos = false		// adicionalmente el usuario ha escrito un nombre y activado enviar (lista para enviar y se debe enviar)
+		,	tiempoUltimaEnvio = null; // para no enviar demasiado, apuntar tiempo -> espera
+		
+		function deviceOrientationHandler(inclinacionID, inclinacionFT, dir) {
+			
+			inclinacionID = Math.round(inclinacionID);
+			inclinacionFT = Math.round(inclinacionFT);
+			dir = Math.round(dir);
+			
+			$("#medidoOrientacionData").html("Izquierda/Derecha "+inclinacionID+"<br>Frente/Parte trasera "+inclinacionFT+"<br>Dirección "+dir).addClass('text-success'); 
+			
+			// si evento se llama sólo una vez y esto con valor 0 el dispositivo no tiene sensor
+			if (eventos == 0 && inclinacionID == 0 && inclinacionFT == 0 && dir == 0) {
+				soloCeros = true;
+				// eso es sospechoso: probablemte no tiene sensor.
+				// --> controlar si pasa tiempo de llamar sin llamar evento
+				setTimeout( function() {
+					if (eventos == 1 && soloCeros) {
+						// solo hubo evento una vez y solo con valores 0 --> navegador soporta evento pero dispositivo no tiene sensor -> no usable
+						hayDatos = false // --> enviarDatos = false;
+						enviarDatos = false;
+						$("#medidoOrientacionData").html("No hay datos disponible.");
+						$('#radioCanal1').attr('disabled', true).parent().parent().addClass('disabled') 
+						$('#statusCanal').html("No se puede transmitir sin sensor de orientasión")
+					}
+				}, 1500) // espera un rato que se mueve el dispositivo
+			} else {
+				soloCeros = false;
+				hayDatos = true;
+			}
+			eventos++;	 // si hay evento solo una vez quedara en 1
+			
+			if (canalActivo) enviarDatos = true; // hayDatos && canalActivo
+
+			// envia por pubnub si todo esta cumplido 
+			if (true/*enviarDatos*/) {
+			    if (tiempoUltimaEnvio) {
+					if (Date.now() < (tiempoUltimaEnvio + 250)) {
+						return;
+					}
+				}
+				
+				tiempoUltimaEnvio = Date.now();
+			
+				fn_enviaPubNub('canalOrientacion', {
+					id: dispositivoId,
+					nombre: $('#nombreDispositivo').val(),
+					incID: inclinacionID,
+					incFT: inclinacionFT,
+					dir: dir
+				})
+			}	
+		}
+		// actualisar estado para enviar
+		function fn_actualisarEstadoEnviable() {
+			if ($('#nombreDispositivo').val().length > 0) {
+				// hay nombre
+				if (hayDatos) {
+					// hay nombre y hay datos
+					
+					// hay nombre y datos -> deben estar usable
+					$('#radioCanalNo').bootstrapSwitch('readonly', false);
+					// solo falta que usuario decide enviar?
+					if (! canalActivo) $('#statusCanal').html("Falta sólo activar la transmisión ...")
+				} else {
+					// hay nombre pero no hay datos
+					$('#radioCanalNo').bootstrapSwitch('state', false,true);
+					$('#radioCanalNo').bootstrapSwitch('readonly', true);
+					canalActivo = false;
+					
+					$('#statusCanal').html("Faltan datos del sensor para transmitir ...")
+				}
+			} else {
+				if (hayDatos) {
+					// no hay nombre pero hay datos
+					// hay nombre y datos -> deben estar usable
+					$('#radioCanalNo').bootstrapSwitch('state', false,true);
+					$('#radioCanalNo').bootstrapSwitch('readonly', true);
+					canalActivo = false;
+					
+					$('#statusCanal').html("Falta escibir un nombre para transmitir ...")
+				} else {
+					// no hay nombre y no hay datos
+					$('#radioCanal1').attr('disabled', true).parent().parent().addClass('disabled')
+					$("#radioCanalNo").prop("checked", true)
+					canalActivo = false;
+					
+					$('#statusCanal').html("Cuando hay datos del sensor y usted ha escrito un nombre puede activar la transmisión ...")
+				}
+			}
+		}
+		
+		// nombre
+		$('#nombreDispositivo').on('input propertychange paste', function() {
+			$('#nombreDispositivo').val($('#nombreDispositivo').val().trim());
+			if ($('#nombreDispositivo').val().length > 0){
+				$('#statusCanal').html("");
+			} else {
+				$('#statusCanal').html("¡Escriba nombre por favor!");		
+			}
+			fn_actualisarEstadoEnviable();
+		});
+
+		
+		// transmision activado?
+		var noCanal = true; 
+		$("#radioCanalNo").bootstrapSwitch({
+			 onSwitchChange: function(event, state) {
+				event.preventDefault();
+				
+				if ($('#nombreDispositivo').val().length == 0){
+					$('#statusCanal').html("¡Escriba nombre por favor!");
+					$('#radioCanalNo').bootstrapSwitch('state', false, true); // true: necesario para que no es recursivo		
+					$('#radioCanalNo').bootstrapSwitch('readonly', true);		
+					noCanal = true;
+					return;
+				}
+			switch(state) { 
+				case true:
+					$('#statusCanal').html('Transmisión orientación <img src="./imagenes/enviar.gif" alt="transmitiendo" height="26" width="26">')		
+					canalActivo = true;
+					if (hayDatos) enviarDatos = true; // hayDatos && canalActivo
+				break;
+				case false:
+					$('#statusCanal').html("No se transmite nada")
+					fn_enviaPubNub('canalOrientacion', {
+						id: dispositivoId,
+						nombre: $('#nombreDispositivo').val(),
+						desconectar: true	// remover recipiente de su lista de dispositivos 
+					})
+					canalActivo = false; 	// --> enviarDatos = false;
+					enviarDatos = false;
+				break;
+			}				
+		}
+	})	
+	/*Script para tomar estado bateria*/	
+	navigator.getBattery().then(function(battery) {
+		  function updateAllBatteryInfo(){
+		    updateChargeInfo();
+		    updateLevelInfo();
+		    updateChargingInfo();
+		    updateDischargingInfo();
+		  }
+		  updateAllBatteryInfo();
+
+		  battery.addEventListener('chargingchange', function(){
+		    updateChargeInfo();
+		  });
+		  function updateChargeInfo(){
+		    console.log("Battery charging? "
+		                + (battery.charging ? "Yes" : "No"));
+		  }
+
+		  battery.addEventListener('levelchange', function(){
+		    updateLevelInfo();
+		  });
+		  function updateLevelInfo(){
+		    console.log("Battery level: "
+		                + battery.level * 100 + "%");
+		    $("#medidorBateria").html( Math.trunc(battery.level * 100)+' %');
+		    fn_enviaPubNub('canalBateria', {
+					id: dispositivoId,
+					nombre: $('#nombreDispositivo').val(),
+					porcentajeBateria:(Math.trunc(battery.level * 100))
+				})
+		  }
+
+		  battery.addEventListener('chargingtimechange', function(){
+		    updateChargingInfo();
+		  });
+		  function updateChargingInfo(){
+		    console.log("Battery charging time: "
+		                 + battery.chargingTime + " seconds");
+		  }
+
+		  battery.addEventListener('dischargingtimechange', function(){
+		    updateDischargingInfo();
+		  });
+		  function updateDischargingInfo(){
+		    console.log("Battery discharging time: "
+		                 + battery.dischargingTime + " seconds");
+		  }
+
+		});
+		
+		/**/
+		/*script  The motion sensor*/
+		//Define an event handler function for processing the device’s acceleration values
+		var accElem;
+		var accGravityElem;
+		    handleDeviceMotionEvent = function(e) {
+		        // Get the current acceleration values in 3 axes and find the greatest of these
+		        var acc = e.acceleration,
+		            maxAcc = Math.max(acc.x, acc.y, acc.z),
+		        // Get the acceleration values including gravity and find the greatest of these
+		            accGravity = e.accelerationIncludingGravity,
+		            maxAccGravity = Math.max(accGravity.x, accGravity.y, accGravity.z);
+		        // Output to the user the greatest current acceleration value in any axis, as
+		        // well as the greatest value in any axis including the effect of gravity
+		        accElem = 'Current acceleration: ' + maxAcc +  'm/s^2';
+		        accGravityElem = 'Value incl. gravity: ' + maxAccGravity + 'm/s^2';
+		        //alert(accElem+' '+accGravityElem);
+		        $("#aceleracion").html(maxAcc +' m/s<sup>2</sup>');
+		        $("#aceleracionConGravedad").html(maxAccGravity +' m/s<sup>2</sup>');
+		        fn_enviaPubNub('canalAceleracion', {
+					id: dispositivoId,
+					nombre: $('#nombreDispositivo').val(),
+					aceleracion:maxAcc,
+					aceleracionConGravedad:maxAccGravity
+				})
+		};
+		// Assign the event handler function to execute when the device is moving
+		window.addEventListener('devicemotion', handleDeviceMotionEvent, false);
+		/**/
+		/*The geolocation sensor*/
+		// Detect the API before using it 
+		var latitud,longitud;
+		if (navigator.geolocation) {
+			// Get a reference to a <div id="map"> tag on the page to insert the map into
+			var successCallback = function(position) {
+				    var lat = position.coords.latitude,
+				        long = position.coords.longitude;
+				        latitud=lat;
+				        longitud=long;
+				        fn_enviaPubNub('canalGPS', {
+							id: dispositivoId,
+							nombre: $('#nombreDispositivo').val(),
+							latitud:latitud,
+							longitud:longitud
+						})
+				        $("#coordendas").html('<p> Latitud: '+latitud+'</p> <p> Longitud: '+longitud+'</p>');
+			    },
+			// Define a function to execute if the user’s location couldn’t be established
+			    errorCallback = function() {
+			          alert("Por favor active su GPS.");
+			    };
+			// Start watching the user’s location, updating once per second (1s = 1000ms)
+			// and execute the appropriate callback function based on whether the user
+			// was successfully located or not
+			navigator.geolocation.watchPosition(successCallback, errorCallback, {
+				maximumAge: 1000
+			});
+		}
+		/*--------------------*/
+
+})	
+</script>
+  </body>
+</html>

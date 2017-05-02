@@ -67,10 +67,64 @@
 			]
 		},
 		{
+			"title": "Porcentaje de Bateria",
+			"width": 1,
+			"row": {
+				"3": 7
+			},
+			"col": {
+				"3": 1
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "gauge",
+					"settings": {
+						"value": "datasources[\"Acelerometro\"][\"porcentajeBateria\"]",
+						"units": "%",
+						"min_value": 0,
+						"max_value": 100
+					}
+				}
+			]
+		},
+		{
+			"title": "Aceleracion del Dispositovo",
+			"width": 1,
+			"row": {
+				"3": 9
+			},
+			"col": {
+				"3": 3
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "sparkline",
+					"settings": {
+						"title": "Aceleracion",
+						"value": [
+							"datasources[\"Acelerometro\"][\"aceleracion\"]"
+						],
+						"include_legend": false
+					}
+				},
+				{
+					"type": "sparkline",
+					"settings": {
+						"title": "Aceleracion con efecto de la gravedad",
+						"value": [
+							"datasources[\"Acelerometro\"][\"aceleracionConGravedad\"]"
+						]
+					}
+				}
+			]
+		},
+		{
 			"title": "El Tiempo",
 			"width": 1,
 			"row": {
-				"3": 1
+				"3": 15
 			},
 			"col": {
 				"3": 1
@@ -82,6 +136,37 @@
 					"settings": {
 						"html": "\n<div id=\"TT103459ca5\"></div>\n<script type=\"text/javascript\" src=\"https://www.tutiempo.net/s-widget/full/103459/ca5/300\"></script>",
 						"height": 2
+					}
+				}
+			]
+		},
+		{
+			"title": "Coordenadas de GPS",
+			"width": 1,
+			"row": {
+				"3": 1
+			},
+			"col": {
+				"3": 1
+			},
+			"col_width": 1,
+			"widgets": [
+				{
+					"type": "text_widget",
+					"settings": {
+						"title": "Latitud:",
+						"size": "regular",
+						"value": "datasources[\"Acelerometro\"][\"latitud\"]",
+						"animate": true
+					}
+				},
+				{
+					"type": "text_widget",
+					"settings": {
+						"title": "Longitud:",
+						"size": "regular",
+						"value": "datasources[\"Acelerometro\"][\"longitud\"]",
+						"animate": true
 					}
 				}
 			]
